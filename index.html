@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>사료연구소 - 우리 아이 맞춤 식단 분석</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -10,290 +11,374 @@
     --green: #5DCAA5;
     --green-light: #E1F5EE;
     --green-dark: #0F6E56;
-    --yellow: #FFF3C4;
-    --purple-light: #F0EEFF;
-    --purple: #7F77DD;
     --black: #1A1A1A;
     --gray: #F5F5F3;
-    --text-muted: #666;
-    --border: #E0E0E0;
+    --gray2: #EFEFED;
+    --text-muted: #777;
+    --border: #E4E4E0;
+    --purple: #7F77DD;
+    --purple-light: #F0EEFF;
+    --yellow: #FFFBEE;
   }
-  body { font-family: 'Noto Sans KR', sans-serif; color: var(--black); background: #fff; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Noto Sans KR', sans-serif; color: var(--black); background: #fff; overflow-x: hidden; }
 
+  /* NAV */
   nav {
     position: sticky; top: 0; z-index: 100;
-    background: #fff; border-bottom: 1px solid var(--border);
-    padding: 0 5%;
+    background: rgba(255,255,255,0.95); backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 6%; height: 58px;
     display: flex; align-items: center; justify-content: space-between;
-    height: 56px;
   }
-  .logo { font-family: 'Noto Serif KR', serif; font-weight: 900; font-size: 18px; letter-spacing: -0.5px; }
+  .logo { font-family: 'Noto Serif KR', serif; font-weight: 900; font-size: 17px; letter-spacing: -0.5px; }
   .nav-cta {
-    background: var(--black); color: #fff;
-    border: none; border-radius: 100px;
-    padding: 8px 20px; font-size: 13px; font-family: 'Noto Sans KR', sans-serif;
-    cursor: pointer; font-weight: 500;
+    background: var(--black); color: #fff; border: none;
+    border-radius: 100px; padding: 9px 22px;
+    font-size: 13px; font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 700; cursor: pointer; transition: background 0.2s;
   }
-
-  section { padding: 80px 5%; }
+  .nav-cta:hover { background: var(--green-dark); }
 
   /* HERO */
   .hero {
-    min-height: 90vh;
+    min-height: 92vh; padding: 100px 6% 80px;
     display: flex; flex-direction: column; justify-content: center;
-    background: #fff;
-    padding: 100px 5% 80px;
-    position: relative; overflow: hidden;
+    position: relative; overflow: hidden; background: #fff;
   }
+  .hero::after {
+    content: ''; position: absolute;
+    right: -80px; top: 50%; transform: translateY(-50%);
+    width: min(500px, 50vw); height: min(500px, 50vw);
+    background: var(--green-light); border-radius: 50%; z-index: 0;
+  }
+  .hero-inner { position: relative; z-index: 1; }
   .hero-badge {
     display: inline-block;
     background: var(--green-light); color: var(--green-dark);
-    font-size: 12px; font-weight: 700; letter-spacing: 1px;
-    padding: 6px 14px; border-radius: 100px;
-    margin-bottom: 32px;
+    font-size: 12px; font-weight: 700; letter-spacing: 0.5px;
+    padding: 7px 16px; border-radius: 100px; margin-bottom: 36px;
   }
   .hero h1 {
     font-family: 'Noto Serif KR', serif;
-    font-size: clamp(36px, 7vw, 72px);
-    font-weight: 900; line-height: 1.15;
-    letter-spacing: -2px;
-    margin-bottom: 24px;
+    font-size: clamp(38px, 6.5vw, 76px);
+    font-weight: 900; line-height: 1.12; letter-spacing: -2.5px;
+    margin-bottom: 28px;
   }
-  .hero h1 span { color: var(--green); }
-  .hero p {
-    font-size: clamp(15px, 2vw, 18px);
-    color: var(--text-muted); line-height: 1.8;
-    max-width: 480px; margin-bottom: 48px;
+  .hero h1 em { color: var(--green); font-style: normal; }
+  .hero-sub {
+    font-size: clamp(15px, 1.8vw, 18px); color: var(--text-muted);
+    line-height: 1.9; max-width: 440px; margin-bottom: 52px;
   }
-  .hero-cta {
+  .cta-wrap { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+  .btn-main {
     display: inline-flex; align-items: center; gap: 10px;
     background: var(--black); color: #fff;
-    padding: 18px 36px; border-radius: 100px;
+    padding: 18px 38px; border-radius: 100px;
     font-size: 16px; font-weight: 700;
     text-decoration: none; border: none; cursor: pointer;
     font-family: 'Noto Sans KR', sans-serif;
     transition: transform 0.2s, background 0.2s;
   }
-  .hero-cta:hover { background: var(--green-dark); transform: translateY(-2px); }
-  .hero-price {
-    margin-top: 16px; font-size: 13px; color: var(--text-muted);
+  .btn-main:hover { background: var(--green-dark); transform: translateY(-2px); }
+  .hero-note { font-size: 13px; color: var(--text-muted); }
+
+  /* SECTION BASE */
+  .sec { padding: 96px 6%; }
+  .sec-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--text-muted); margin-bottom: 14px;
   }
-  .hero-deco {
-    position: absolute; right: 5%; top: 50%; transform: translateY(-50%);
-    width: min(420px, 45vw); height: min(420px, 45vw);
-    background: var(--green-light); border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: clamp(80px, 12vw, 140px);
+  .sec-title {
+    font-family: 'Noto Serif KR', serif;
+    font-size: clamp(26px, 4vw, 48px); font-weight: 900;
+    letter-spacing: -1.5px; line-height: 1.25;
+  }
+
+  /* HOOK - 공감 */
+  .hook { background: var(--yellow); }
+  .hook-inner { max-width: 640px; }
+  .hook-story {
+    margin-top: 48px; font-size: clamp(16px, 2vw, 20px);
+    line-height: 2.1; color: #444;
+  }
+  .hook-story .scene {
+    display: block; font-family: 'Noto Serif KR', serif;
+    font-size: clamp(18px, 2.5vw, 24px); font-weight: 700;
+    color: var(--black); margin: 32px 0 16px;
+  }
+  .hook-story .quote {
+    display: inline-block;
+    background: #fff; border-left: 3px solid var(--green);
+    padding: 14px 20px; border-radius: 0 12px 12px 0;
+    font-style: italic; color: var(--text-muted);
+    margin: 8px 0 24px;
+  }
+  .hook-questions {
+    margin-top: 40px; display: flex; flex-direction: column; gap: 14px;
+  }
+  .hook-q {
+    display: flex; align-items: flex-start; gap: 12px;
+    font-size: 15px; line-height: 1.7; color: #555;
+  }
+  .hook-q::before {
+    content: '·'; font-size: 24px; color: var(--green);
+    line-height: 1.2; flex-shrink: 0;
   }
 
   /* PAIN */
   .pain { background: var(--black); color: #fff; }
-  .pain h2 {
-    font-family: 'Noto Serif KR', serif;
-    font-size: clamp(24px, 4vw, 42px); font-weight: 900;
-    letter-spacing: -1px; margin-bottom: 48px;
-    line-height: 1.3;
-  }
-  .pain h2 span { color: var(--green); }
-  .pain-list { display: flex; flex-direction: column; gap: 20px; max-width: 600px; }
+  .pain .sec-title { color: #fff; }
+  .pain .sec-title em { color: var(--green); font-style: normal; }
+  .pain-list { margin-top: 52px; display: flex; flex-direction: column; gap: 16px; max-width: 600px; }
   .pain-item {
     display: flex; align-items: flex-start; gap: 16px;
-    padding: 24px; background: rgba(255,255,255,0.05);
-    border-radius: 16px; border: 1px solid rgba(255,255,255,0.08);
+    padding: 22px 24px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 16px;
   }
-  .pain-x { font-size: 18px; color: #ff6b6b; flex-shrink: 0; margin-top: 2px; }
-  .pain-item p { font-size: 15px; line-height: 1.7; color: rgba(255,255,255,0.85); }
+  .pain-x { color: #ff6b6b; font-size: 16px; flex-shrink: 0; margin-top: 3px; font-weight: 700; }
+  .pain-item p { font-size: 15px; line-height: 1.75; color: rgba(255,255,255,0.8); }
   .pain-item strong { color: #fff; }
+  .pain-twist {
+    margin-top: 56px; padding: 36px;
+    background: var(--green); border-radius: 20px;
+    max-width: 600px;
+  }
+  .pain-twist p {
+    font-family: 'Noto Serif KR', serif;
+    font-size: clamp(18px, 2.5vw, 24px); font-weight: 700;
+    color: var(--black); line-height: 1.6;
+  }
+  .pain-twist span { display: block; font-size: 14px; font-weight: 400; margin-top: 12px; color: var(--green-dark); font-family: 'Noto Sans KR', sans-serif; }
 
   /* VALUES */
   .values { background: var(--gray); }
-  .values-header { margin-bottom: 56px; }
-  .values-header .label {
-    font-size: 12px; font-weight: 700; letter-spacing: 2px;
-    color: var(--text-muted); text-transform: uppercase; margin-bottom: 12px;
+  .values-grid {
+    margin-top: 52px;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px;
   }
-  .values-header h2 {
+  .val-card { background: #fff; padding: 44px 32px; }
+  .val-card:first-child { border-radius: 20px 0 0 20px; }
+  .val-card:last-child { border-radius: 0 20px 20px 0; }
+  .val-en {
     font-family: 'Noto Serif KR', serif;
-    font-size: clamp(28px, 4vw, 48px); font-weight: 900;
-    letter-spacing: -1.5px; line-height: 1.2;
+    font-size: clamp(26px, 3vw, 40px); font-weight: 900; letter-spacing: -1px;
   }
-  .values-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; }
-  .value-card {
-    background: #fff; padding: 48px 32px;
-  }
-  .value-card:first-child { border-radius: 16px 0 0 16px; }
-  .value-card:last-child { border-radius: 0 16px 16px 0; }
-  .value-en {
-    font-family: 'Noto Serif KR', serif;
-    font-size: clamp(28px, 3.5vw, 42px); font-weight: 900;
-    letter-spacing: -1px; margin-bottom: 4px;
-  }
-  .value-color { color: var(--purple); }
-  .value-ko { font-size: 14px; color: var(--text-muted); margin-top: 16px; line-height: 1.7; }
+  .val-color { color: var(--purple); }
+  .val-desc { font-size: 14px; color: var(--text-muted); margin-top: 18px; line-height: 1.8; }
 
-  /* WHAT */
-  .what { background: #fff; }
-  .what-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
-  .what-text .label {
-    font-size: 12px; font-weight: 700; letter-spacing: 2px;
-    color: var(--text-muted); text-transform: uppercase; margin-bottom: 16px;
+  /* SERVICE */
+  .service { background: #fff; }
+  .service-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; margin-top: 52px; }
+  .service-text p { font-size: 15px; color: var(--text-muted); line-height: 1.95; }
+  .service-card {
+    background: var(--green-light); border-radius: 24px; padding: 40px;
   }
-  .what-text h2 {
+  .service-card h3 {
     font-family: 'Noto Serif KR', serif;
-    font-size: clamp(24px, 3.5vw, 40px); font-weight: 900;
-    letter-spacing: -1px; line-height: 1.3; margin-bottom: 24px;
+    font-size: 19px; font-weight: 900; color: var(--green-dark); margin-bottom: 28px;
   }
-  .what-text p { font-size: 15px; color: var(--text-muted); line-height: 1.9; }
-  .what-card {
-    background: var(--green-light);
-    border-radius: 24px; padding: 40px;
-  }
-  .what-card h3 {
-    font-family: 'Noto Serif KR', serif;
-    font-size: 20px; font-weight: 900; margin-bottom: 24px;
-    color: var(--green-dark);
-  }
-  .report-items { display: flex; flex-direction: column; gap: 14px; }
-  .report-item {
-    display: flex; align-items: center; gap: 12px;
+  .report-list { display: flex; flex-direction: column; gap: 12px; }
+  .report-row {
+    display: flex; align-items: center; gap: 14px;
     background: #fff; padding: 14px 18px; border-radius: 12px;
   }
-  .report-num {
+  .rnum {
     width: 28px; height: 28px; border-radius: 50%;
     background: var(--green); color: #fff;
     font-size: 12px; font-weight: 700;
     display: flex; align-items: center; justify-content: center; flex-shrink: 0;
   }
-  .report-item span { font-size: 14px; font-weight: 500; }
+  .report-row span { font-size: 14px; font-weight: 500; }
 
   /* WHO */
-  .who { background: var(--gray); }
-  .who h2 {
-    font-family: 'Noto Serif KR', serif;
-    font-size: clamp(24px, 4vw, 42px); font-weight: 900;
-    letter-spacing: -1px; margin-bottom: 48px;
-    line-height: 1.3;
+  .who { background: var(--gray2); }
+  .who-grid {
+    margin-top: 52px;
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;
   }
-  .who-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
-  .who-card {
-    background: #fff; border-radius: 20px; padding: 32px;
-  }
-  .who-icon { font-size: 32px; margin-bottom: 16px; }
-  .who-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 10px; }
+  .who-card { background: #fff; border-radius: 20px; padding: 32px; }
+  .who-icon { font-size: 28px; margin-bottom: 14px; }
+  .who-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 10px; line-height: 1.5; }
   .who-card p { font-size: 14px; color: var(--text-muted); line-height: 1.8; }
 
   /* TRUST */
-  .trust { background: var(--green); color: #fff; text-align: center; }
-  .trust h2 {
+  .trust { background: var(--green); }
+  .trust .sec-title { color: var(--black); }
+  .trust-body {
+    margin-top: 32px; font-size: clamp(15px, 1.8vw, 18px);
+    line-height: 2; color: var(--green-dark); max-width: 560px;
+  }
+  .trust-body strong { color: var(--black); }
+
+  /* MIMOJI PLACEHOLDER */
+  .mimoji-sec { background: #fff; padding: 80px 6%; }
+  .mimoji-inner {
+    max-width: 640px; margin: 0 auto; text-align: center;
+  }
+  .mimoji-row {
+    display: flex; align-items: center; gap: 24px;
+    margin-bottom: 48px; text-align: left;
+  }
+  .mimoji-row.right { flex-direction: row-reverse; text-align: right; }
+  .mimoji-img {
+    width: 100px; height: 100px; border-radius: 50%;
+    background: var(--green-light); flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 44px;
+  }
+  .mimoji-text h3 {
     font-family: 'Noto Serif KR', serif;
-    font-size: clamp(24px, 4vw, 44px); font-weight: 900;
-    letter-spacing: -1px; margin-bottom: 20px; line-height: 1.3;
+    font-size: clamp(18px, 2.5vw, 26px); font-weight: 900;
+    letter-spacing: -0.5px; margin-bottom: 10px; line-height: 1.4;
   }
-  .trust p { font-size: 16px; opacity: 0.85; line-height: 1.8; max-width: 520px; margin: 0 auto 48px; }
-  .trust-badge {
-    display: inline-block;
-    background: rgba(255,255,255,0.2); color: #fff;
-    font-size: 13px; font-weight: 700;
-    padding: 8px 20px; border-radius: 100px; margin-bottom: 32px;
-  }
+  .mimoji-text h3 em { color: var(--green); font-style: normal; }
+  .mimoji-text p { font-size: 14px; color: var(--text-muted); line-height: 1.8; }
 
   /* PRICE */
-  .price { background: #fff; }
-  .price h2 {
-    font-family: 'Noto Serif KR', serif;
-    font-size: clamp(24px, 4vw, 42px); font-weight: 900;
-    letter-spacing: -1px; margin-bottom: 48px; line-height: 1.3;
+  .price { background: var(--gray); }
+  .price-grid {
+    margin-top: 52px;
+    display: grid; grid-template-columns: repeat(2, 1fr);
+    gap: 24px; max-width: 720px;
   }
-  .price-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; max-width: 720px; }
   .price-card {
-    border: 2px solid var(--border); border-radius: 24px; padding: 36px;
-    position: relative;
+    background: #fff; border: 2px solid var(--border);
+    border-radius: 24px; padding: 36px; position: relative;
   }
-  .price-card.featured { border-color: var(--green); }
+  .price-card.best { border-color: var(--green); }
   .price-badge {
     position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
-    background: var(--green); color: #fff; font-size: 12px; font-weight: 700;
-    padding: 5px 16px; border-radius: 100px; white-space: nowrap;
+    background: var(--green); color: #fff;
+    font-size: 12px; font-weight: 700;
+    padding: 5px 18px; border-radius: 100px; white-space: nowrap;
   }
-  .price-tag { font-size: 36px; font-weight: 900; margin-bottom: 4px; letter-spacing: -1px; }
-  .price-name { font-size: 14px; color: var(--text-muted); margin-bottom: 24px; }
-  .price-features { list-style: none; display: flex; flex-direction: column; gap: 12px; margin-bottom: 28px; }
-  .price-features li { font-size: 14px; display: flex; gap: 8px; align-items: flex-start; line-height: 1.5; }
-  .price-features li::before { content: "✓"; color: var(--green); font-weight: 700; flex-shrink: 0; }
-  .price-btn {
+  .price-amt { font-size: 38px; font-weight: 900; letter-spacing: -1.5px; margin-bottom: 4px; }
+  .price-name { font-size: 13px; color: var(--text-muted); margin-bottom: 28px; }
+  .price-feats { list-style: none; display: flex; flex-direction: column; gap: 11px; margin-bottom: 28px; }
+  .price-feats li { font-size: 14px; display: flex; gap: 8px; line-height: 1.5; }
+  .price-feats li::before { content: "✓"; color: var(--green); font-weight: 700; flex-shrink: 0; }
+  .btn-price {
     width: 100%; padding: 14px; border-radius: 100px;
     font-size: 15px; font-weight: 700; cursor: pointer;
-    font-family: 'Noto Sans KR', sans-serif; border: none;
-    transition: transform 0.2s;
+    font-family: 'Noto Sans KR', sans-serif; border: none; transition: transform 0.2s;
   }
-  .price-btn:hover { transform: translateY(-2px); }
-  .price-btn.primary { background: var(--black); color: #fff; }
-  .price-btn.secondary { background: var(--gray); color: var(--black); }
+  .btn-price:hover { transform: translateY(-2px); }
+  .btn-dark { background: var(--black); color: #fff; }
+  .btn-light { background: var(--gray2); color: var(--black); }
+
+  /* FINAL CTA */
+  .final-cta {
+    background: var(--black); color: #fff;
+    padding: 100px 6%; text-align: center;
+  }
+  .final-cta h2 {
+    font-family: 'Noto Serif KR', serif;
+    font-size: clamp(28px, 5vw, 56px); font-weight: 900;
+    letter-spacing: -2px; line-height: 1.2; margin-bottom: 24px;
+  }
+  .final-cta h2 em { color: var(--green); font-style: normal; }
+  .final-cta p { font-size: 16px; color: rgba(255,255,255,0.6); margin-bottom: 48px; line-height: 1.8; }
 
   /* FAQ */
   .faq { background: var(--gray); }
-  .faq h2 {
-    font-family: 'Noto Serif KR', serif;
-    font-size: clamp(24px, 3.5vw, 36px); font-weight: 900;
-    letter-spacing: -1px; margin-bottom: 40px;
-  }
-  .faq-list { max-width: 640px; display: flex; flex-direction: column; gap: 0; }
+  .faq-list { margin-top: 48px; max-width: 640px; }
   .faq-item { border-top: 1px solid var(--border); }
   .faq-item:last-child { border-bottom: 1px solid var(--border); }
   .faq-q {
-    padding: 20px 0; font-size: 15px; font-weight: 700;
+    width: 100%; padding: 20px 0;
     display: flex; justify-content: space-between; align-items: center;
-    cursor: pointer; background: none; border: none; width: 100%;
-    text-align: left; font-family: 'Noto Sans KR', sans-serif; color: var(--black);
+    background: none; border: none; cursor: pointer; text-align: left;
+    font-size: 15px; font-weight: 700;
+    font-family: 'Noto Sans KR', sans-serif; color: var(--black);
   }
-  .faq-a { padding: 0 0 20px; font-size: 14px; color: var(--text-muted); line-height: 1.8; display: none; }
+  .faq-a { padding: 0 0 20px; font-size: 14px; color: var(--text-muted); line-height: 1.9; display: none; }
   .faq-a.open { display: block; }
 
   /* FOOTER */
   footer {
-    background: var(--black); color: rgba(255,255,255,0.5);
-    padding: 60px 5%;
+    background: var(--black); padding: 56px 6%;
     display: flex; justify-content: space-between; align-items: flex-end;
-    flex-wrap: wrap; gap: 24px;
+    flex-wrap: wrap; gap: 20px;
   }
   .footer-logo { font-family: 'Noto Serif KR', serif; font-weight: 900; font-size: 20px; color: #fff; }
-  .footer-copy { font-size: 12px; line-height: 1.8; }
+  .footer-copy { font-size: 12px; color: rgba(255,255,255,0.35); line-height: 1.9; }
 
+  /* MOBILE */
   @media (max-width: 768px) {
-    .hero-deco { display: none; }
-    .values-grid { grid-template-columns: 1fr; }
-    .value-card { border-radius: 0; }
-    .value-card:first-child { border-radius: 16px 16px 0 0; }
-    .value-card:last-child { border-radius: 0 0 16px 16px; }
-    .what-inner { grid-template-columns: 1fr; gap: 40px; }
+    .hero::after { display: none; }
+    .values-grid { grid-template-columns: 1fr; gap: 2px; }
+    .val-card { border-radius: 0 !important; }
+    .val-card:first-child { border-radius: 20px 20px 0 0 !important; }
+    .val-card:last-child { border-radius: 0 0 20px 20px !important; }
+    .service-inner { grid-template-columns: 1fr; gap: 40px; }
     .who-grid { grid-template-columns: 1fr; }
     .price-grid { grid-template-columns: 1fr; }
+    .mimoji-row.right { flex-direction: row; text-align: left; }
     footer { flex-direction: column; align-items: flex-start; }
   }
+
+  /* FADE IN ANIMATION */
+  .fade-up {
+    opacity: 0; transform: translateY(32px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .fade-up.visible { opacity: 1; transform: translateY(0); }
 </style>
 </head>
 <body>
 
+<!-- NAV -->
 <nav>
   <div class="logo">사료연구소</div>
-  <button class="nav-cta" onclick="document.querySelector('.price').scrollIntoView({behavior:'smooth'})">지금 신청하기 →</button>
+  <button class="nav-cta" onclick="document.querySelector('.price').scrollIntoView({behavior:'smooth'})">신청하기 →</button>
 </nav>
 
 <!-- HERO -->
 <section class="hero">
-  <div class="hero-badge">🔬 사료분석가가 직접 설계합니다</div>
-  <h1>사료를 바꿔도<br>왜 <span>똑같을까요?</span></h1>
-  <p>문제는 어떤 사료냐가 아닙니다.<br>아이에게 맞는 식단 구조가 없어서입니다.<br>사료연구소가 처음부터 다시 설계해드립니다.</p>
-  <a class="hero-cta" href="#" onclick="document.querySelector('.price').scrollIntoView({behavior:'smooth'}); return false;">
-    우리 아이 분석 신청하기 →
-  </a>
-  <p class="hero-price">기본 분석 10,000원부터 · PDF 리포트 발송</p>
-  <div class="hero-deco">🐾</div>
+  <div class="hero-inner">
+    <div class="hero-badge">🔬 사료분석가가 직접 설계합니다</div>
+    <h1>사료를 바꿔도<br>왜 <em>똑같을까요?</em></h1>
+    <p class="hero-sub">
+      문제는 어떤 사료냐가 아닙니다.<br>
+      아이에게 맞는 식단 구조가 없어서입니다.<br>
+      사료연구소가 처음부터 다시 설계해드립니다.
+    </p>
+    <div class="cta-wrap">
+      <button class="btn-main" onclick="document.querySelector('.price').scrollIntoView({behavior:'smooth'})">
+        우리 아이 분석 신청하기 →
+      </button>
+      <span class="hero-note">기본 분석 10,000원 · PDF 리포트 발송</span>
+    </div>
+  </div>
+</section>
+
+<!-- HOOK - 공감 -->
+<section class="sec hook fade-up">
+  <div class="hook-inner">
+    <div class="sec-label">혹시 이런 적 있으세요?</div>
+    <h2 class="sec-title">밥그릇 앞에서<br>그냥 가버리는 우리 아이</h2>
+    <div class="hook-story">
+      <span class="scene">밥그릇 앞에 앉아서<br>한참을 쳐다보다 그냥 가버리는 우리 아이.</span>
+      <span class="quote">"오늘도 안 먹었네..."</span>
+      사료를 또 바꿔야 하나<br>
+      아픈 건 아닐까<br>
+      내가 뭘 잘못 먹이고 있는 건 아닐까.
+    </div>
+    <div class="hook-questions">
+      <div class="hook-q">유튜브 켜면 정보가 너무 많고, 커뮤니티마다 말이 다 달라요</div>
+      <div class="hook-q">수의사한테 가면 "일단 이거 드세요" 한 마디뿐이고요</div>
+      <div class="hook-q">좋다는 사료는 다 사봤는데 우리 아이한테만 안 맞는 것 같아요</div>
+    </div>
+  </div>
 </section>
 
 <!-- PAIN -->
-<section class="pain">
-  <h2>이런 고민,<br><span>한 번쯤 해보셨죠?</span></h2>
+<section class="sec pain fade-up">
+  <div class="sec-label" style="color:rgba(255,255,255,0.4)">사실 이게 문제예요</div>
+  <h2 class="sec-title">사료를 <em>바꾸는 게</em><br>답이 아닐 수 있어요</h2>
   <div class="pain-list">
     <div class="pain-item">
       <div class="pain-x">✕</div>
@@ -301,81 +386,121 @@
     </div>
     <div class="pain-item">
       <div class="pain-x">✕</div>
-      <p><strong>유튜브, 커뮤니티 정보는 너무 많고</strong> 뭘 믿어야 할지 모르겠어요</p>
+      <p>좋다는 사료를 줬더니 <strong>오히려 더 안 먹어요</strong></p>
     </div>
     <div class="pain-item">
       <div class="pain-x">✕</div>
-      <p>수의사한테 갔더니 <strong>"그냥 이거 드세요"</strong>만 듣고 나왔어요</p>
+      <p><strong>여러 사료를 섞어주다 보니</strong> 뭐가 맞고 틀린지 모르겠어요</p>
     </div>
     <div class="pain-item">
       <div class="pain-x">✕</div>
-      <p>좋다는 사료는 다 먹여봤는데 <strong>우리 아이한테만 안 맞는 것 같아요</strong></p>
+      <p>먹는 건 잘 먹는데 <strong>왜 자꾸 소화를 못 시키는지</strong> 모르겠어요</p>
     </div>
+  </div>
+  <div class="pain-twist">
+    <p>많은 경우 문제는 '어떤 사료냐'가 아니라<br>
+    <strong>'어떻게 먹이고 있느냐'에 있습니다.</strong></p>
+    <span>급여 구조, 양, 조합 방식. 이게 틀어지면 아무리 좋은 사료도 소용없어요.</span>
   </div>
 </section>
 
 <!-- VALUES -->
-<section class="values">
-  <div class="values-header">
-    <div class="label">Our Values</div>
-    <h2>사료연구소가<br>다른 이유</h2>
-  </div>
+<section class="sec values fade-up">
+  <div class="sec-label">Our Values</div>
+  <h2 class="sec-title">사료연구소가<br>다른 이유</h2>
   <div class="values-grid">
-    <div class="value-card">
-      <div class="value-en">Analyze</div>
-      <div class="value-en value-color">Deep</div>
-      <p class="value-ko">지금 급여 중인 사료를<br>성분 단위로 파고듭니다</p>
+    <div class="val-card">
+      <div class="val-en">Analyze</div>
+      <div class="val-en val-color">Deep</div>
+      <p class="val-desc">지금 급여 중인 사료를<br>성분 단위로 파고듭니다</p>
     </div>
-    <div class="value-card">
-      <div class="value-en">Design</div>
-      <div class="value-en value-color">Fit</div>
-      <p class="value-ko">추천이 아닌 설계.<br>아이 상태에 맞게 처음부터 짭니다</p>
+    <div class="val-card">
+      <div class="val-en">Design</div>
+      <div class="val-en val-color">Fit</div>
+      <p class="val-desc">추천이 아닌 설계.<br>아이 상태에 맞게 처음부터 짭니다</p>
     </div>
-    <div class="value-card">
-      <div class="value-en">Make</div>
-      <div class="value-en value-color">Change</div>
-      <p class="value-ko">단계별 실천 루트로<br>변화가 보이도록 안내합니다</p>
+    <div class="val-card">
+      <div class="val-en">Make</div>
+      <div class="val-en val-color">Change</div>
+      <p class="val-desc">단계별 실천 루트로<br>변화가 보이도록 안내합니다</p>
     </div>
   </div>
 </section>
 
-<!-- WHAT -->
-<section class="what">
-  <div class="what-inner">
-    <div class="what-text">
-      <div class="label">Our Service</div>
-      <h2>이런 내용을<br>PDF로 받아요</h2>
-      <p>단순 사료 추천이 아닙니다.<br>아이의 나이, 체중, 현재 사료, 증상을 모두 분석해서<br>지금 당장 실천 가능한 식단 구조를 만들어드립니다.</p>
+<!-- MIMOJI SECTION -->
+<section class="mimoji-sec fade-up">
+  <div class="mimoji-inner">
+    <div class="sec-label" style="text-align:center; margin-bottom:48px;">이런 분들이 찾아오세요</div>
+
+    <div class="mimoji-row">
+      <div class="mimoji-img">🐶</div>
+      <div class="mimoji-text">
+        <h3>사료를 바꿔도<br><em>계속 같은 문제</em>가 반복돼요</h3>
+        <p>원인을 모르면 사료를 백 번 바꿔도 달라지지 않아요.<br>구조를 먼저 파악해야 합니다.</p>
+      </div>
     </div>
-    <div class="what-card">
+
+    <div class="mimoji-row right">
+      <div class="mimoji-img">😟</div>
+      <div class="mimoji-text">
+        <h3>뭘 먹여야 할지<br><em>너무 모르겠어요</em></h3>
+        <p>정보는 많은데 아이에게 맞는 정보가 없어요.<br>사료연구소는 우리 아이 기준으로 분석합니다.</p>
+      </div>
+    </div>
+
+    <div class="mimoji-row">
+      <div class="mimoji-img">🐱</div>
+      <div class="mimoji-text">
+        <h3>제대로 한번<br><em>분석받고 싶어요</em></h3>
+        <p>막연한 불안 대신, 근거 있는 식단 구조를 원한다면<br>사료연구소가 맞습니다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICE -->
+<section class="sec service fade-up" style="background: var(--gray);">
+  <div class="sec-label">Our Service</div>
+  <h2 class="sec-title">이런 내용을<br>PDF로 받아요</h2>
+  <div class="service-inner">
+    <div class="service-text">
+      <p>
+        단순 사료 추천이 아닙니다.<br><br>
+        아이의 나이, 체중, 현재 사료, 증상을 모두 분석해서<br>
+        지금 당장 실천 가능한 식단 구조를 만들어드립니다.<br><br>
+        <strong>"단순한 추천 말고,<br>근거 있는 답을 원했어요"</strong>
+      </p>
+    </div>
+    <div class="service-card">
       <h3>📋 맞춤 식단 분석 리포트</h3>
-      <div class="report-items">
-        <div class="report-item"><div class="report-num">1</div><span>현재 사료별 성분 상세 분석</span></div>
-        <div class="report-item"><div class="report-num">2</div><span>문제 원인 진단</span></div>
-        <div class="report-item"><div class="report-num">3</div><span>아이 맞춤 급여량 계산</span></div>
-        <div class="report-item"><div class="report-num">4</div><span>단계별 해결 루트 제시</span></div>
-        <div class="report-item"><div class="report-num">5</div><span>앞으로의 식단 방향 가이드</span></div>
+      <div class="report-list">
+        <div class="report-row"><div class="rnum">1</div><span>현재 사료별 성분 상세 분석</span></div>
+        <div class="report-row"><div class="rnum">2</div><span>문제 원인 진단</span></div>
+        <div class="report-row"><div class="rnum">3</div><span>아이 맞춤 하루 급여량 계산</span></div>
+        <div class="report-row"><div class="rnum">4</div><span>단계별 식단 전환 루트</span></div>
+        <div class="report-row"><div class="rnum">5</div><span>앞으로의 방향 가이드</span></div>
       </div>
     </div>
   </div>
 </section>
 
 <!-- WHO -->
-<section class="who">
-  <h2>이런 아이에게<br>꼭 필요해요</h2>
+<section class="sec who fade-up">
+  <div class="sec-label">이런 아이에게 꼭 필요해요</div>
+  <h2 class="sec-title">우리 아이도<br>해당되나요?</h2>
   <div class="who-grid">
     <div class="who-card">
-      <div class="who-icon">🐶</div>
+      <div class="who-icon">🍽️</div>
       <h3>사료를 안 먹거나 편식하는 아이</h3>
       <p>기호성 문제인지, 식습관 구조 문제인지 원인부터 파악합니다</p>
     </div>
     <div class="who-card">
-      <div class="who-icon">🐱</div>
+      <div class="who-icon">🩺</div>
       <h3>피부, 소화, 체중 문제가 있는 아이</h3>
       <p>먹는 것을 바꿔서 해결할 수 있는 문제인지 분석합니다</p>
     </div>
     <div class="who-card">
-      <div class="who-icon">🏥</div>
+      <div class="who-icon">🔀</div>
       <h3>여러 사료를 섞어 먹이고 있는 아이</h3>
       <p>지금 급여 구조가 맞는지, 어떻게 정리해야 하는지 알려드립니다</p>
     </div>
@@ -388,46 +513,61 @@
 </section>
 
 <!-- TRUST -->
-<section class="trust">
-  <div class="trust-badge">사료분석가</div>
-  <h2>수의사가 아닙니다.<br>대신, 아이 밥그릇만큼은<br>누구보다 깊이 팝니다.</h2>
-  <p>사료 성분표를 읽고, 급여 구조를 분석하고,<br>아이에게 맞는 식단을 설계하는 사람들입니다.<br>각자의 아이가 건강하고 오래 살길 바라는 마음으로 만들었습니다.</p>
+<section class="sec trust fade-up">
+  <div class="sec-label">사료분석가</div>
+  <h2 class="sec-title">수의사가 아닙니다.<br>대신, 아이 밥그릇만큼은<br>누구보다 깊이 팝니다.</h2>
+  <p class="trust-body">
+    사료 성분표를 읽고, 급여 구조를 분석하고,<br>
+    아이에게 맞는 식단을 설계하는 사람들입니다.<br><br>
+    <strong>각자의 아이가 건강하게, 오래 살길 바라는 마음으로 만들었습니다.</strong>
+  </p>
 </section>
 
 <!-- PRICE -->
-<section class="price">
-  <h2>간단하게,<br>부담 없이 시작해요</h2>
+<section class="sec price fade-up">
+  <div class="sec-label">Pricing</div>
+  <h2 class="sec-title">간단하게,<br>부담 없이 시작해요</h2>
   <div class="price-grid">
     <div class="price-card">
-      <div class="price-tag">10,000원</div>
+      <div class="price-amt">10,000원</div>
       <div class="price-name">기본 분석</div>
-      <ul class="price-features">
+      <ul class="price-feats">
         <li>현재 사료 분석 (최대 3종)</li>
         <li>급여 구조 진단</li>
         <li>맞춤 개선 방향 제시</li>
         <li>PDF 리포트 발송</li>
       </ul>
-      <button class="price-btn secondary">신청하기</button>
+      <button class="btn-price btn-light">신청하기</button>
     </div>
-    <div class="price-card featured">
+    <div class="price-card best">
       <div class="price-badge">가장 많이 선택</div>
-      <div class="price-tag">25,000원</div>
+      <div class="price-amt">25,000원</div>
       <div class="price-name">심층 분석</div>
-      <ul class="price-features">
-        <li>현재 사료 분석 (전체)</li>
+      <ul class="price-feats">
+        <li>현재 사료 전체 분석</li>
         <li>급여 구조 + 식습관 진단</li>
         <li>단계별 실천 루트 설계</li>
         <li>급여량 계산 포함</li>
         <li>PDF 리포트 + 1회 추가 질문</li>
       </ul>
-      <button class="price-btn primary">심층 분석 신청하기</button>
+      <button class="btn-price btn-dark">심층 분석 신청하기</button>
     </div>
   </div>
 </section>
 
+<!-- FINAL CTA -->
+<section class="final-cta fade-up">
+  <h2>사료를 또 바꾸기 전에,<br><em>한 번만 제대로</em> 분석해보세요.</h2>
+  <p>아이가 건강하게 오래 사는 것.<br>그게 저희가 이 서비스를 만든 이유입니다. 🐾</p>
+  <button class="btn-main" onclick="document.querySelector('.price').scrollIntoView({behavior:'smooth'})">
+    지금 신청하기 →
+  </button>
+</section>
+
 <!-- FAQ -->
-<section class="faq">
-  <h2>자주 묻는 질문</h2>
+<section class="sec faq fade-up">
+  <div class="sec-label">FAQ</div>
+  <h2 class="sec-title">자주 묻는 질문</h2>
   <div class="faq-list">
     <div class="faq-item">
       <button class="faq-q" onclick="toggleFaq(this)">분석 결과는 언제 받을 수 있나요? <span>+</span></button>
@@ -435,7 +575,7 @@
     </div>
     <div class="faq-item">
       <button class="faq-q" onclick="toggleFaq(this)">강아지, 고양이 둘 다 가능한가요? <span>+</span></button>
-      <div class="faq-a">네, 강아지와 고양이 모두 분석 가능합니다. 신청 시 종류와 정보를 기재해주세요.</div>
+      <div class="faq-a">네, 강아지와 고양이 모두 분석 가능합니다. 신청 시 종류와 상세 정보를 기재해주세요.</div>
     </div>
     <div class="faq-item">
       <button class="faq-q" onclick="toggleFaq(this)">어떤 정보를 제공해야 하나요? <span>+</span></button>
@@ -443,11 +583,11 @@
     </div>
     <div class="faq-item">
       <button class="faq-q" onclick="toggleFaq(this)">수의사 상담과 어떻게 다른가요? <span>+</span></button>
-      <div class="faq-a">저희는 수의사가 아닙니다. 질병 진단이나 치료는 수의사에게 받으셔야 합니다. 사료연구소는 먹는 것에 집중합니다. 지금 급여 구조가 맞는지, 어떤 사료가 이 아이에게 잘 맞는지 식단 관점에서 분석해드립니다.</div>
+      <div class="faq-a">저희는 수의사가 아닙니다. 질병 진단이나 치료는 수의사에게 받으셔야 합니다. 사료연구소는 먹는 것에 집중합니다. 지금 급여 구조가 맞는지, 어떤 식단이 이 아이에게 맞는지 분석해드립니다.</div>
     </div>
     <div class="faq-item">
       <button class="faq-q" onclick="toggleFaq(this)">결제는 어떻게 하나요? <span>+</span></button>
-      <div class="faq-a">신청 버튼을 누르면 결제 페이지로 이동합니다. 결제 완료 후 신청 폼을 작성하시면 됩니다.</div>
+      <div class="faq-a">신청 버튼을 누르면 결제 페이지로 이동합니다. 결제 완료 후 신청 폼을 작성해주시면 분석을 시작합니다.</div>
     </div>
   </div>
 </section>
@@ -455,7 +595,7 @@
 <footer>
   <div>
     <div class="footer-logo">사료연구소</div>
-    <p class="footer-copy" style="margin-top:12px;">아이가 건강하게, 오래 살길 바랍니다.</p>
+    <p class="footer-copy" style="margin-top:10px;">아이가 건강하게, 오래 살길 바랍니다. 🐾</p>
   </div>
   <p class="footer-copy">© 2025 사료연구소 All rights reserved.</p>
 </footer>
@@ -469,6 +609,11 @@ function toggleFaq(btn) {
   document.querySelectorAll('.faq-q span').forEach(el => el.textContent = '+');
   if (!isOpen) { a.classList.add('open'); span.textContent = '−'; }
 }
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.12 });
+document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
 </script>
 </body>
 </html>
